@@ -1,0 +1,17 @@
+{
+  "name": "express-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./api/app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "start": "npm install --prefix api && cd api && node app.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+  },
+  "engines": {
+    "node": "13.11.0"
+  },
+  "author": "nina",
+  "license": "ISC"
+}

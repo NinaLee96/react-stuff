@@ -1,0 +1,150 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "apps.openshift.io/v1",
+      "kind": "DeploymentConfig",
+      "metadata": {
+        "name": "client",
+        "namespace": "test",
+        "labels": {
+          "project": "client",
+          "version": "0.1.0",
+          "provider": "nodeshift",
+          "app": "client",
+          "app.kubernetes.io/name": "nodejs",
+          "app.kubernetes.io/component": "client",
+          "app.kubernetes.io/instance": "client",
+          "app.openshift.io/runtime": "nodejs"
+        },
+        "annotations": {
+          "nodeshift/git-branch": "master",
+          "nodeshift/git-commit": "04c5f581b8f455702b805543bdfe11bfe8e4fee1"
+        }
+      },
+      "spec": {
+        "replicas": 1,
+        "revisionHistoryLimit": 2,
+        "selector": {
+          "app": "client",
+          "project": "client",
+          "provider": "nodeshift"
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          },
+          {
+            "type": "ImageChange",
+            "imageChangeParams": {
+              "automatic": true,
+              "containerNames": [
+                "client"
+              ],
+              "from": {
+                "kind": "ImageStreamTag",
+                "namespace": "test",
+                "name": "client:latest"
+              }
+            }
+          }
+        ],
+        "template": {
+          "metadata": {
+            "labels": {
+              "project": "client",
+              "version": "0.1.0",
+              "provider": "nodeshift",
+              "app": "client"
+            },
+            "annotations": {
+              "nodeshift/git-branch": "master",
+              "nodeshift/git-commit": "04c5f581b8f455702b805543bdfe11bfe8e4fee1"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "image": "client",
+                "name": "client",
+                "securityContext": {
+                  "privileged": false
+                },
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "name": "http",
+                    "protocol": "TCP"
+                  }
+                ],
+                "env": []
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "spec": {
+        "selector": {
+          "project": "client",
+          "provider": "nodeshift"
+        },
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080,
+            "targetPort": 8080,
+            "name": "http"
+          }
+        ],
+        "type": "ClusterIP"
+      },
+      "metadata": {
+        "name": "client",
+        "namespace": "test",
+        "labels": {
+          "project": "client",
+          "version": "0.1.0",
+          "provider": "nodeshift",
+          "app.kubernetes.io/name": "nodejs",
+          "app.kubernetes.io/component": "client",
+          "app.kubernetes.io/instance": "client",
+          "app.openshift.io/runtime": "nodejs"
+        },
+        "annotations": {
+          "nodeshift/git-branch": "master",
+          "nodeshift/git-commit": "04c5f581b8f455702b805543bdfe11bfe8e4fee1"
+        }
+      }
+    },
+    {
+      "apiVersion": "route.openshift.io/v1",
+      "kind": "Route",
+      "spec": {
+        "to": {
+          "kind": "Service",
+          "name": "client"
+        },
+        "port": {
+          "targetPort": 8080
+        }
+      },
+      "metadata": {
+        "name": "client",
+        "labels": {
+          "project": "client",
+          "version": "0.1.0",
+          "provider": "nodeshift",
+          "app.kubernetes.io/name": "nodejs",
+          "app.kubernetes.io/component": "client",
+          "app.kubernetes.io/instance": "client",
+          "app.openshift.io/runtime": "nodejs"
+        }
+      }
+    }
+  ]
+}
