@@ -1,0 +1,12 @@
+.app {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: 1fr;
+  grid-template-areas: "login";
+}
+
+.item-login {
+  grid-area: login;
+  display: flex;
+  justify-content: center;
+}
